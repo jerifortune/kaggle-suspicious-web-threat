@@ -17,7 +17,7 @@ def read_file(file_path):
          raise ValueError("Invalid file type. This function only acecepts json and csv file formats")
          
 
-df = read_file("/Users/jerifortune/Documents/kaggle-suspicious-web-threat/dataset/CloudWatch_Traffic_Web_Attack.csv")
+df = read_file("CloudWatch_Traffic_Web_Attack.csv")
 
 
 # Converting to dataframe
