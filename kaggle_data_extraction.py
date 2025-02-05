@@ -2,6 +2,7 @@ import kagglehub;
 import pandas as pd;
 
 
+
 # Download  kaggle cybersecurity-suspicious-web-threat-interactions dataset
 path = kagglehub.dataset_download("jancsg/cybersecurity-suspicious-web-threat-interactions")
 
@@ -19,22 +20,44 @@ def read_file(file_path):
 df = read_file('CloudWatch_Traffic_Web_Attack.csv')
 
 
+# convert dates to datetime
+df['creation_time'] = pd.to_datetime(df['creation_time'])
+df['end_time'] = pd.to_datetime(df['end_time'])
+df['time'] = pd.to_datetime(df['time'])
 
 # Converting to dataframe
 
 df = pd.DataFrame(df)
 
-df.head(5)
-df.columns
+#df.head(5)
+#df.columns
 
+# change the data types
+new_dtype_dict = {
+    'bytes_in':'int64', 
+    'bytes_out':'int64', 
+    'src_ip':'str',
+    'src_ip_country_code':'str', 
+    'protocol':'str' ,
+    'response.code':'int64', 
+    'dst_port':'int64',
+    'dst_ip':'str', 
+    'rule_names':'str', 
+    'observation_name':'str', 
+    'source.meta':'str',
+    'source.name':'str', 
+    'detection_types':'str'
+    }
+
+df.astype(new_dtype_dict)
 
 # Renaming the columns
 
 cols_new_name_dict = {
-    'bytes_in':'', 
-    'bytes_out':'', 
+    'bytes_in':'bytes_in', 
+    'bytes_out':'bytes_out', 
     'creation_time':'creation_time', 
-    'end_time':'nd_time', 
+    'end_time':'end_time', 
     'src_ip':'source_ip',
     'src_ip_country_code':'source_ip_country_code', 
     'protocol':'protocol' ,
@@ -49,4 +72,12 @@ cols_new_name_dict = {
     'detection_types':'detection_types'
     }
 df.rename(cols_new_name_dict, axis=1, inplace=True)
+
+
+
+# Add a calculated column
+df['event_duration'] = df['end_time']- df['creation_time']
+
+# covert the event duration to seconds
+df['event_duration'] = df['event_duration'].dt.seconds
 df.head(5)
